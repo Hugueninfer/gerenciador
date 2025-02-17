@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Enrollment;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class EnrollmentController extends Controller
@@ -49,4 +50,46 @@ class EnrollmentController extends Controller
         $enrollment->delete();
         return response()->json(['message' => 'Matrícula deletada com sucesso']);
     }
+
+    public function studentsByCourse($courseId)
+    {
+        $students = Enrollment::where('course_id', $courseId)
+            ->with('student') 
+            ->get()
+            ->pluck('student'); 
+
+        if ($students->isEmpty()) {
+            return response()->json([
+                'message' => 'Nenhum aluno encontrado para este curso.'
+            ], 404);
+        }
+
+        return response()->json($students);
+    }
+
+    public function coursesByStudent($studentId)
+    {
+        $student = Student::find($studentId);
+        if (!$student) {
+            return response()->json([
+                'message' => 'Aluno não encontrado.'
+            ], 404);
+        }
+
+        $courses = Enrollment::where('student_id', $studentId)
+            ->with('course') 
+            ->get()
+            ->map(function ($enrollment) {
+                return $enrollment->course; 
+            });
+
+        if ($courses->isEmpty()) {
+            return response()->json([
+                'message' => 'Nenhum curso encontrado para este aluno.'
+            ], 404);
+        }
+
+        return response()->json($courses);
+    }
+
 }

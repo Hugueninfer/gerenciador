@@ -13,6 +13,11 @@ class Student extends Model
 
     public function enrollments()
     {
-        return $this->hasMany(Enrollment::class);
+        return $this->hasMany(Enrollment::class, 'student_id');
+    }
+    
+    public function courses()
+    {
+        return $this->hasManyThrough(Course::class, Enrollment::class, 'student_id', 'id', 'id', 'course_id');
     }
 }

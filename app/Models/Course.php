@@ -12,7 +12,12 @@ class Course extends Model
     protected $fillable = ['name', 'description', 'duration'];
 
     public function enrollments()
-    {
-        return $this->hasMany(Enrollment::class);
-    }
+{
+    return $this->hasMany(Enrollment::class, 'course_id');
+}
+
+public function students()
+{
+    return $this->hasManyThrough(Student::class, Enrollment::class, 'course_id', 'id', 'id', 'student_id');
+}
 }
