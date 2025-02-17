@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CourseRequest;
 use Illuminate\Http\Request;
 use App\Models\Course;
 
@@ -13,16 +14,9 @@ class CourseController extends Controller
         return response()->json(Course::all());
     }
 
-    public function store(Request $request)
+    public function store(CourseRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration' => 'required|integer',
-        ]);
-
-        $course = Course::create($request->all());
-
+        $course = Course::create($request->validated());
         return response()->json($course, 201);
     }
 
@@ -31,16 +25,9 @@ class CourseController extends Controller
         return response()->json($course);
     }
 
-    public function update(Request $request, Course $course)
+    public function update(CourseRequest $request, Course $course)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration' => 'required|integer',
-        ]);
-
-        $course->update($request->all());
-
+        $course->update($request->validated());
         return response()->json($course);
     }
 

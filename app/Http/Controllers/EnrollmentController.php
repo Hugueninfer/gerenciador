@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EnrollmentRequest;
 use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -14,16 +15,9 @@ class EnrollmentController extends Controller
         return response()->json(Enrollment::with(['course', 'student'])->get());
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'student_id' => 'required|exists:students,id',
-            'enrollment_date' => 'required|date',
-        ]);
-
-        $enrollment = Enrollment::create($request->all());
-
+    public function store(EnrollmentRequest $request)
+    { 
+        $enrollment = Enrollment::create($request->validated());
         return response()->json($enrollment, 201);
     }
 
@@ -32,16 +26,9 @@ class EnrollmentController extends Controller
         return response()->json($enrollment->load(['course', 'student']));
     }
 
-    public function update(Request $request, Enrollment $enrollment)
+    public function update(EnrollmentRequest $request, Enrollment $enrollment)
     {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'student_id' => 'required|exists:students,id',
-            'enrollment_date' => 'required|date',
-        ]);
-
-        $enrollment->update($request->all());
-
+        $enrollment->update($request->validated());
         return response()->json($enrollment);
     }
 
