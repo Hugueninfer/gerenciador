@@ -5,10 +5,6 @@
 Siga os passos abaixo para configurar e executar o projeto corretamente:
 
 ### 1. Clonar o Repositório
-```sh
- git clone <URL_DO_REPOSITORIO>
- cd <NOME_DO_PROJETO>
-```
 
 ### 2. Instalar Dependências
 
